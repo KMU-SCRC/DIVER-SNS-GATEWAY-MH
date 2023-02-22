@@ -113,7 +113,11 @@ int main(void)
             /* we pass our 'chunk' struct to the callback function */
             curl_easy_setopt(curl_put, CURLOPT_WRITEDATA, (void*)&chunk);
             curl_easy_setopt(curl_put, CURLOPT_URL, LOGIN_URL);
+#ifdef _WIN32
             curl_easy_setopt(curl_put, CURLOPT_COOKIEJAR, "D:\\data\\cookies.txt");
+#else
+            curl_easy_setopt(curl_put, CURLOPT_COOKIEJAR, "/home/kmuscrc/PROJECT/DIVERSNS/COOKIES/cookies.txt");
+#endif
             //curl_easy_setopt(curl_put, CURLOPT_COOKIELIST, "FLUSH");
 
             curl_easy_setopt(curl_post, CURLOPT_HTTPHEADER, headerlist);
@@ -169,7 +173,11 @@ int main(void)
                     //printf("À¯¾Ë¿¤:%s\n",POST_URL);
                     //curl_easy_setopt(curl_post, CURLOPT_URL, POST_URL);
                     curl_easy_setopt(curl_put, CURLOPT_COOKIELIST, "FLUSH");
+#ifdef _WIN32
                     curl_easy_setopt(curl_post, CURLOPT_COOKIEFILE, "D:\\data\\cookies.txt");
+#else
+                    curl_easy_setopt(curl_post, CURLOPT_COOKIEFILE, "/home/kmuscrc/PROJECT/DIVERSNS/COOKIES/cookies.txt");
+#endif
                     break;
                 }
                 else {
