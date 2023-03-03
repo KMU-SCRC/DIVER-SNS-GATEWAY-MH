@@ -301,8 +301,8 @@ int main(void)
 #ifdef _WIN32
             curl_easy_setopt(curl_put, CURLOPT_COOKIEJAR, "D:\\data\\cookies.txt");
 #else
-            curl_easy_setopt(curl_put, CURLOPT_COOKIEJAR, "/home/kmuscrc/PROJECT/DIVERSNS/COOKIES/cookies.txt");
             MakeDirectory("/home/kmuscrc/PROJECT/DIVERSNS/COOKIES/cookies.txt");
+            curl_easy_setopt(curl_put, CURLOPT_COOKIEJAR, "/home/kmuscrc/PROJECT/DIVERSNS/COOKIES/cookies.txt");
 #endif
             //curl_easy_setopt(curl_put, CURLOPT_COOKIELIST, "FLUSH");
 
