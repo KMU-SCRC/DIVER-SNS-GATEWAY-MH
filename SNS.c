@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <signal.h>
 #include <curl/curl.h>
 
 #ifndef _WIN32
@@ -17,6 +18,7 @@
 #include <termios.h> // Contains POSIX terminal control definitions
 #include <unistd.h> // write(), read(), close()
 #endif
+int quit = 0;
 
 struct MemoryStruct {
     char* memory;
@@ -66,12 +68,16 @@ void MakeDirectory(unsigned char* full_path)
 
 }
 
+static void
+handle_sigint(int signum) {
+    quit = 1;
+}
+
 int main(void)
 {
     CURL* curl_put;
     CURL* curl_post;
     CURLcode res;
-    int quit = 0;
     int init = 0;
     //int gnum = 0;
 
@@ -129,6 +135,7 @@ int main(void)
     curl_post = curl_easy_init();
 
 #ifndef _WIN32
+    struct sigaction sa;
     struct termios SENSORnewtio;
     struct termios GPSnewtio;
     int SENSORttyfd = 0;
@@ -280,6 +287,20 @@ int main(void)
     //close(SENSORttyfd); //close serial port
     //close(GPSttyfd); //close serial port
     //return 0;
+#endif
+
+#ifdef _WIN32
+    signal(SIGINT, handle_sigint);
+#else
+    memset(&sa, 0, sizeof(sa));
+    sigemptyset(&sa.sa_mask);
+    sa.sa_handler = handle_sigint;
+    sa.sa_flags = 0;
+    sigaction(SIGINT, &sa, NULL);
+    sigaction(SIGTERM, &sa, NULL);
+    /* So we do not exit on a SIGPIPE */
+    sa.sa_handler = SIG_IGN;
+    sigaction(SIGPIPE, &sa, NULL);
 #endif
 
     if (!curl_put && !curl_post) {
